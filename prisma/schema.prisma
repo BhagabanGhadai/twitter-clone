@@ -11,5 +11,45 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
+model User{
+  id String @id @unique @default(cuid())
+  firstName String
+  lastName String?
+  email String @unique
+  password String?
+  profileImageUrl String?
+  loginType LoginType @default(EMAIL_PASSWORD)
+  forgotPasswordOtp Int?
+  forgotPasswordExpiry DateTime?
+  emailVerificationOTP Int?
+  emailVerificationExpiry DateTime?
+  isVerified Boolean @default(false)
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts Post[]
+  @@map("users")
+}
+
+
+model Post{
+  id String @id @unique @default(cuid())
+  userId String
+  user User @relation(fields: [userId],references: [id])
+  content String
+  imageUrl String?
+  isDraft Boolean @default(false)
+  isDeleted Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("posts")
+}
+
+
+enum LoginType{
+  GOOGLE
+  EMAIL_PASSWORD
+}

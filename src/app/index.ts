@@ -1,26 +1,30 @@
-import express from 'express';
-import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
+import { User } from './user';
+import { Post } from './post';
 
-
-export async function initServer() {
-    const app = express()
-    app.use(express.json())
-    const graphqlServer = new ApolloServer({
-        typeDefs: `
+let typeDefs= `
+        ${User.types}
+        ${Post.types}
         type Query{
-        sayHello:String
-        sayHelloToMe(name:String!):String
+             ${User.queries}
+             ${Post.queries}
         }
-        `,
-        resolvers: {
-            Query: {
-                sayHello: () => `Hello From GraphQl server`,
-                sayHelloToMe:(_:any,{name}:{name:string})=> `Hey ${name} , Welcome To GraphQL`
-            }
+        type Mutation{
+             ${User.mutations}
+             ${Post.mutations}
         }
-    })
-    await graphqlServer.start();
-    app.use('/graphql', expressMiddleware(graphqlServer));
-    return app
+        `
+
+let resolvers={
+    Query: {
+        ...User.resolvers.queries,
+        ...Post.resolvers.queries
+    },
+    Mutation:{
+        ...User.resolvers.mutations,
+        ...Post.resolvers.mutations
+    },
+    ...Post.resolvers.extraReslover,
+    ...User.resolvers.extraReslover
 }
+  
+export { typeDefs,resolvers }
