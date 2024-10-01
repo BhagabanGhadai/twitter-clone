@@ -7,9 +7,16 @@
     "build": "tsc -p .",
     "dev": "tsc-watch --onSuccess \"npm start\""
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BhagabanGhadai/twitter-clone.git"
+  },
+  "author": "bhagabanghadai043@gmail.com",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BhagabanGhadai/twitter-clone/issues"
+  },
+  "homepage": "https://github.com/BhagabanGhadai/twitter-clone#readme",
   "description": "",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -32,5 +39,5 @@
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.30.1",
     "morgan": "^1.10.0"
-  }
+  } 
 }
