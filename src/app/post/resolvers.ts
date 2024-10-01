@@ -1,9 +1,15 @@
-import { Post } from "@prisma/client"
-import { TweetService } from "../../services/tweetService"
-import { UserService } from "../../services/userService"
-import { GraphQLContext,ICreateTweet,IUpdateTweet } from "../../types"
+import { Post } from "@prisma/client";
+import { TweetService } from "../../services/tweetService";
+import { UserService } from "../../services/userService";
+import { GraphQLContext,ICreateTweet,IUpdateTweet } from "../../types";
+import { putObjectURL } from '../../utils/s3';
 
 const queries={
+    getSignedUrl:async(_:any,{imageType,fileName}:{imageType:string,fileName:string},ctx:GraphQLContext)=>{ 
+        if(!ctx.user?.userId) throw new Error("invalid Token")
+        let generateSingnedUrl=await putObjectURL(ctx.user?.userId,fileName,imageType)
+        return generateSingnedUrl
+    },
     getAllTweet: async(_:any,__:any) =>{
         const newTweet=await TweetService.fetchAllTweet()
         return newTweet

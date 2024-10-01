@@ -1,5 +1,6 @@
 import { TweetRepository } from "../repository/tweetRepository";
 import { ICreateTweet,IUpdateTweet } from "../types";
+import { deleteS3Object } from "../utils/s3";
 
 export class TweetService{
     public static async createTweet(data:ICreateTweet){
@@ -26,6 +27,9 @@ export class TweetService{
         if(!getTweet) throw new Error("Tweet Not Found")
         if(getTweet.userId!=userId) throw new Error("You Can't delete someone else'e tweet")
         let Tweet=await TweetRepository.deleteTweetById(id)
+        if(Tweet&&Tweet.imageUrl){
+            await deleteS3Object(Tweet.imageUrl)
+        }
         return Tweet
     }
 }
