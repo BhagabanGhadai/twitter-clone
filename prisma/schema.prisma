@@ -9,47 +9,71 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
-model User{
-  id String @id @unique @default(cuid())
-  firstName String
-  lastName String?
-  email String @unique
-  password String?
-  profileImageUrl String?
-  loginType LoginType @default(EMAIL_PASSWORD)
-  forgotPasswordOtp Int?
-  forgotPasswordExpiry DateTime?
-  emailVerificationOTP Int?
+model User {
+  id                      String      @id @unique @default(cuid())
+  firstName               String
+  lastName                String?
+  email                   String      @unique
+  password                String?
+  profileImageUrl         String?
+  loginType               LoginType   @default(EMAIL_PASSWORD)
+  forgotPasswordOtp       Int?
+  forgotPasswordExpiry    DateTime?
+  emailVerificationOTP    Int?
   emailVerificationExpiry DateTime?
-  isVerified Boolean @default(false)
-  isActive Boolean @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  posts Post[]
+  isVerified              Boolean     @default(false)
+  isActive                Boolean     @default(true)
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
+  posts                   Post[]
+  followings              Following[] @relation("following")
+  followers               Following[] @relation("follower")
+  likes                   Like[]
+
   @@map("users")
 }
 
-
-model Post{
-  id String @id @unique @default(cuid())
-  userId String
-  user User @relation(fields: [userId],references: [id])
-  content String
-  imageUrl String?
-  isDraft Boolean @default(false)
-  isDeleted Boolean @default(false)
+model Post {
+  id        String   @id @unique @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  content   String
+  imageUrl  String?
+  isDraft   Boolean  @default(false)
+  isDeleted Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  likes     Like[]
+
   @@map("posts")
 }
 
+model Following {
+  followerId  String
+  follower    User   @relation("follower", fields: [followerId], references: [id])
+  followingId String
+  following   User   @relation("following", fields: [followingId], references: [id])
 
-enum LoginType{
+  @@id([followerId, followingId])
+  @@map("followings")
+}
+
+model Like {
+  postId String
+  post   Post   @relation(fields: [postId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id(name: "likeId", fields: [postId, userId])
+  @@map("likes")
+}
+
+enum LoginType {
   GOOGLE
   EMAIL_PASSWORD
 }
