@@ -103,7 +103,6 @@ export class UserService {
     const { email, password } = payload;
     const user = await UserRepository.getUserByEmail(email)
     if (!user) throw new Error("user not found");
-    console.log(user)
     if (!user.isVerified) throw new Error("user not verified yet");
     if (!user.isActive) throw new Error("user not Active yet");
     if (!user.password) throw new Error("Try Another Login Method");

@@ -5,4 +5,5 @@ export const mutations = `#graphql
     forgotPassword(input: ForgotPasswordInput!): String!
     verifyEmail(input:VerifyOTPInput!): AuthTokenGeneration!
     deleteUser(id: String!): String!
+    followUnfollowUser(id:ID!):String!
 `;

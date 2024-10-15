@@ -31,6 +31,8 @@ input UpdateUserInput {
     profileImageUrl: String
     password: String
     tweets: [Tweet]
+    followers: [User]
+    following: [User]
   }
 
   type AuthTokenGeneration {
