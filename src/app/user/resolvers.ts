@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import { TweetService } from "../../services/tweetService";
 import { UserService } from "../../services/userService";
-import { FollowUnFollowService } from "../../services/extraService";
+import { FollowUnFollowService, LikeUnLIkeService } from "../../services/extraService";
 import { GraphQLContext, ISignInRequest, ISignupRequestWithEmail, IUpdateUser, VerifyOTP, IForgotPassword, IGetAllUserFilter } from "../../types"
 
 const queries = {
@@ -69,7 +69,8 @@ const extraReslover = {
     User: {
         tweets: (parent: User) => TweetService.fetchAllTweetOfAUser(parent.id),
         followers: (parent: User) => FollowUnFollowService.fetchFollowerOfUser(parent.id),
-        following: (parent: User) => FollowUnFollowService.fetchFollowingOfUser(parent.id)
+        following: (parent: User) => FollowUnFollowService.fetchFollowingOfUser(parent.id),
+        likes: (parent:User) => LikeUnLIkeService.getAllLikedPostOfAuser(parent.id)
     }
 }
 export const resolvers = { queries, mutations, extraReslover }

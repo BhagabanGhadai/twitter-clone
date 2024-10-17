@@ -19,19 +19,27 @@ export class FollowUnFollowService {
     public static async fetchFollowingOfUser(followerId: string) {
         let following = await FollowRepository.getAllFollowingOfUser(followerId);
         return following.map(follow => follow.following );
-      }
+    }
       
 }
 
 export class LikeUnLIkeService {
     public static async likeUnlikeAPost(userId: string, postId: string) {
-        let isFollowing = await LikeRepository.getLikeAPost(userId, postId);
-        if (!isFollowing) {
+        let isLiked = await LikeRepository.getLikeAPost(userId, postId);
+        if (!isLiked) {
             await LikeRepository.likeAPost(userId, postId)
-            return true
+            return "liked Successfully"
         } else {
             await LikeRepository.unLikeAPost(userId, postId)
-            return false
+            return "unLiked Successfully"
         }
+    }
+    public static async getAllLikeOfAPost(postId: string,) {
+        let posts = await LikeRepository.getAllLikeOfPost(postId);
+        return posts.map(post => post.user );
+    }
+    public static async getAllLikedPostOfAuser(userId: string) {
+        let users = await LikeRepository.getAllLikedPostOfUser(userId);
+        return users.map(user => user.post)
     }
 }

@@ -31,6 +31,7 @@ input UpdateUserInput {
     profileImageUrl: String
     password: String
     tweets: [Tweet]
+    likes: [Tweet]
     followers: [User]
     following: [User]
   }
